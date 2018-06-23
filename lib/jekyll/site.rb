@@ -3,7 +3,7 @@
 module Jekyll
   class Site
     attr_reader   :source, :dest, :config
-    attr_accessor :layouts, :pages, :static_files, :drafts,
+    attr_accessor :layouts, :static_files, :drafts,
                   :exclude, :include, :lsi, :highlighter, :permalink_style,
                   :time, :future, :unpublished, :safe, :plugins, :limit_posts,
                   :show_drafts, :keep_files, :baseurl, :data, :file_read_opts,
@@ -215,7 +215,7 @@ module Jekyll
     end
 
     def pages
-      collections['pages'] ||= Collection.new(self, 'pages')
+      collections["pages"] ||= Collection.new(self, "pages")
     end
 
     # Construct a Hash of Posts indexed by the specified Post attribute.

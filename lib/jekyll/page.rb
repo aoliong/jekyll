@@ -41,8 +41,8 @@ module Jekyll
 
       full_path = site.in_source_dir(base, dir, name)
       super(full_path, {
-        :site => site,
-        :collection => site.pages
+        :site       => site,
+        :collection => site.pages,
       })
 
       process(@name)
@@ -105,7 +105,7 @@ module Jekyll
     # NOTE: COMPATIBILITY
     #
     # Render the page
-    def render(layouts, site_payload)
+    def render(_layouts, site_payload)
       self.output = Jekyll::Renderer.new(@site, self, site_payload).run
     end
 
@@ -174,9 +174,9 @@ module Jekyll
 
     # Don't generate a title
     def post_read
-      original = data['title']
+      original = data["title"]
       super
-      data['title'] = original
+      data["title"] = original
     end
 
     # NOTE: COMPATIBILITY
@@ -193,6 +193,5 @@ module Jekyll
         data[property]
       end
     end
-
   end
 end
