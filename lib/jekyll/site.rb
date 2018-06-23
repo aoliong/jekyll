@@ -88,7 +88,6 @@ module Jekyll
                     Time.now
                   end
       self.layouts = {}
-      self.pages = []
       self.static_files = []
       self.data = {}
       @site_data = nil
@@ -464,7 +463,7 @@ module Jekyll
     end
 
     def render_pages(payload)
-      pages.flatten.each do |page|
+      pages.docs.flatten.each do |page|
         render_regenerated(page, payload)
       end
     end
