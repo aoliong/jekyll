@@ -1,7 +1,13 @@
+# frozen_string_literal: true
+
 module Jekyll
   module Tags
     class Link < Liquid::Tag
-      TagName = 'link'
+      class << self
+        def tag_name
+          name.split("::").last.downcase
+        end
+      end
 
       def initialize(tag_name, relative_path, tokens)
         super
@@ -12,15 +18,23 @@ module Jekyll
       def render(context)
         site = context.registers[:site]
 
-        site.docs_to_write.each do |document|
-          return document.url if document.relative_path == @relative_path
+        liquid = site.liquid_renderer.file("(jekyll:link)")
+        relative_path = liquid.parse(@relative_path).render(context)
+
+        site.each_site_file do |item|
+          return item.url if item.relative_path == relative_path
+          # This takes care of the case for static files that have a leading /
+          return item.url if item.relative_path == "/#{relative_path}"
         end
 
-        raise ArgumentError, "Could not find document '#{@relative_path}' in tag '#{TagName}'.\n\n" \
-          "Make sure the document exists and the path is correct."
+        raise ArgumentError, <<~MSG
+          Could not find document '#{relative_path}' in tag '#{self.class.tag_name}'.
+
+          Make sure the document exists and the path is correct.
+        MSG
       end
     end
   end
 end
 
-Liquid::Template.register_tag(Jekyll::Tags::Link::TagName, Jekyll::Tags::Link)
+Liquid::Template.register_tag(Jekyll::Tags::Link.tag_name, Jekyll::Tags::Link)

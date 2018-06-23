@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jekyll
   class Page < Document
     attr_writer :dir
@@ -6,8 +8,6 @@ module Jekyll
     attr_writer :data
 
     alias_method :extname, :ext
-
-    FORWARD_SLASH = '/'.freeze
 
     # NOTE: COMPATIBILITY
     #
@@ -18,15 +18,15 @@ module Jekyll
       name
       path
       url
-    )
+    ).freeze
 
     # A set of extensions that are considered HTML or HTML-like so we
     # should not alter them,  this includes .xhtml through XHTM5.
-    HTML_EXTENSIONS = %W(
+    HTML_EXTENSIONS = %w(
       .html
       .xhtml
       .htm
-    )
+    ).freeze
 
     # Initialize a new Page.
     #
@@ -53,15 +53,15 @@ module Jekyll
     #
     # The generated directory into which the page will be placed
     # upon generation. This is derived from the permalink or, if
-    # permalink is absent, we be '/'
+    # permalink is absent, will be '/'
     #
     # Returns the String destination directory.
     def dir
-      if url.end_with?(FORWARD_SLASH)
+      if url.end_with?("/")
         url
       else
         url_dir = File.dirname(url)
-        url_dir.end_with?(FORWARD_SLASH) ? url_dir : "#{url_dir}/"
+        url_dir.end_with?("/") ? url_dir : "#{url_dir}/"
       end
     end
 
@@ -84,7 +84,7 @@ module Jekyll
       {
         :path       => @dir,
         :basename   => basename,
-        :output_ext => output_ext
+        :output_ext => output_ext,
       }
     end
 
@@ -115,16 +115,14 @@ module Jekyll
     #
     # Returns the path to the source file
     def path
-      data.fetch('path') do
-        relative_path.sub(/\A\//, '')
-      end
+      data.fetch("path") { relative_path }
     end
 
     # Compatiblity
     #
     # The path to the page source file, relative to the site source
     def relative_path
-      File.join(*[@dir, @name].map(&:to_s).reject(&:empty?))
+      File.join(*[@dir, @name].map(&:to_s).reject(&:empty?)).sub(%r!\A\/!, "")
     end
 
     # NOTE: COMPATIBILITY
@@ -145,7 +143,7 @@ module Jekyll
     #
     # Returns the object as a debug String.
     def inspect
-      "#<Jekyll:Page @name=#{name.inspect}>"
+      "#<Jekyll::Page @name=#{name.inspect}>"
     end
 
     # Returns the Boolean of whether this Page is HTML or not.
@@ -155,7 +153,7 @@ module Jekyll
 
     # Returns the Boolean of whether this Page is an index file or not.
     def index?
-      basename == 'index'
+      basename == "index"
     end
 
     def trigger_hooks(hook_name, *args)

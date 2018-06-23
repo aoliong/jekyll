@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jekyll
   class Layout
     include Convertible
@@ -10,6 +12,9 @@ module Jekyll
 
     # Gets the path to this layout.
     attr_reader :path
+
+    # Gets the path to this layout relative to its base
+    attr_reader :relative_path
 
     # Gets/Sets the extension of this layout.
     attr_accessor :ext
@@ -37,6 +42,7 @@ module Jekyll
         @base_dir = site.source
         @path = site.in_source_dir(base, name)
       end
+      @relative_path = @path.sub(@base_dir, "")
 
       self.data = {}
 
@@ -51,14 +57,6 @@ module Jekyll
     # Returns nothing.
     def process(name)
       self.ext = File.extname(name)
-    end
-
-    # The path to the layout, relative to the site source.
-    #
-    # Returns a String path which represents the relative path
-    #   from the site source to this layout
-    def relative_path
-      @relative_path ||= Pathname.new(path).relative_path_from(Pathname.new(@base_dir)).to_s
     end
   end
 end

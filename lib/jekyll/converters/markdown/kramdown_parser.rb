@@ -1,5 +1,4 @@
 # Frozen-string-literal: true
-# Encoding: utf-8
 
 module Jekyll
   module Converters
@@ -11,11 +10,10 @@ module Jekyll
           "line_numbers"      => "inline",
           "line_number_start" => 1,
           "tab_width"         => 4,
-          "wrap"              => "div"
+          "wrap"              => "div",
         }.freeze
 
         def initialize(config)
-          Jekyll::External.require_with_graceful_fail "kramdown"
           @main_fallback_highlighter = config["highlighter"] || "rouge"
           @config = config["kramdown"] || {}
           @highlighter = nil
@@ -24,7 +22,8 @@ module Jekyll
 
         # Setup and normalize the configuration:
         #   * Create Kramdown if it doesn't exist.
-        #   * Set syntax_highlighter, detecting enable_coderay and merging highlighter if none.
+        #   * Set syntax_highlighter, detecting enable_coderay and merging
+        #       highlighter if none.
         #   * Merge kramdown[coderay] into syntax_highlighter_opts stripping coderay_.
         #   * Make sure `syntax_highlighter_opts` exists.
 
@@ -37,26 +36,30 @@ module Jekyll
         end
 
         def convert(content)
-          Kramdown::Document.new(content, @config).to_html
+          document = Kramdown::Document.new(content, @config)
+          html_output = document.to_html
+          if @config["show_warnings"]
+            document.warnings.each do |warning|
+              Jekyll.logger.warn "Kramdown warning:", warning
+            end
+          end
+          html_output
         end
 
         private
-        def make_accessible(hash = @config)
-          proc_ = proc { |hash_, key| hash_[key.to_s] if key.is_a?(Symbol) }
-          hash.default_proc = proc_
 
-          hash.each do |_, val|
-            make_accessible val if val.is_a?(
-              Hash
-            )
+        def make_accessible(hash = @config)
+          hash.keys.each do |key|
+            hash[key.to_sym] = hash[key]
+            make_accessible(hash[key]) if hash[key].is_a?(Hash)
           end
         end
 
-        # config[kramdown][syntax_higlighter] > config[kramdown][enable_coderay] > config[highlighter]
+        # config[kramdown][syntax_higlighter] >
+        #   config[kramdown][enable_coderay] >
+        #   config[highlighter]
         # Where `enable_coderay` is now deprecated because Kramdown
         # supports Rouge now too.
-
-        private
         def highlighter
           return @highlighter if @highlighter
 
@@ -68,8 +71,10 @@ module Jekyll
 
           @highlighter = begin
             if @config.key?("enable_coderay") && @config["enable_coderay"]
-              Jekyll::Deprecator.deprecation_message "You are using 'enable_coderay', " \
+              Jekyll::Deprecator.deprecation_message(
+                "You are using 'enable_coderay', " \
                 "use syntax_highlighter: coderay in your configuration file."
+              )
 
               "coderay"
             else
@@ -78,10 +83,9 @@ module Jekyll
           end
         end
 
-        private
         def strip_coderay_prefix(hash)
           hash.each_with_object({}) do |(key, val), hsh|
-            cleaned_key = key.gsub(/\Acoderay_/, "")
+            cleaned_key = key.to_s.gsub(%r!\Acoderay_!, "")
 
             if key != cleaned_key
               Jekyll::Deprecator.deprecation_message(
@@ -96,12 +100,12 @@ module Jekyll
         # If our highlighter is CodeRay we go in to merge the CodeRay defaults
         # with your "coderay" key if it's there, deprecating it in the
         # process of you using it.
-
-        private
         def modernize_coderay_config
-          if highlighter == "coderay"
-            Jekyll::Deprecator.deprecation_message "You are using 'kramdown.coderay' in your configuration, " \
+          unless @config["coderay"].empty?
+            Jekyll::Deprecator.deprecation_message(
+              "You are using 'kramdown.coderay' in your configuration, " \
               "please use 'syntax_highlighter_opts' instead."
+            )
 
             @config["syntax_highlighter_opts"] = begin
               strip_coderay_prefix(

@@ -1,18 +1,18 @@
 # [Jekyll](https://jekyllrb.com/)
 
 [![Gem Version](https://img.shields.io/gem/v/jekyll.svg)][ruby-gems]
-[![Build Status](https://travis-ci.org/jekyll/jekyll.svg?branch=master)][travis]
-[![Test Coverage](https://codeclimate.com/github/jekyll/jekyll/badges/coverage.svg)][coverage]
-[![Code Climate](https://codeclimate.com/github/jekyll/jekyll/badges/gpa.svg)][codeclimate]
-[![Dependency Status](https://gemnasium.com/jekyll/jekyll.svg)][gemnasium]
+[![Linux Build Status](https://img.shields.io/travis/jekyll/jekyll/master.svg?label=Linux%20build)][travis]
+[![Windows Build status](https://img.shields.io/appveyor/ci/jekyll/jekyll/master.svg?label=Windows%20build)][appveyor]
+[![Maintainability](https://api.codeclimate.com/v1/badges/8ba0cb5b17bb9848e128/maintainability)](codeclimate)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/8ba0cb5b17bb9848e128/test_coverage)](coverage)
 [![Security](https://hakiri.io/github/jekyll/jekyll/master.svg)][hakiri]
 
 [ruby-gems]: https://rubygems.org/gems/jekyll
-[gemnasium]: https://gemnasium.com/jekyll/jekyll
 [codeclimate]: https://codeclimate.com/github/jekyll/jekyll
 [coverage]: https://codeclimate.com/github/jekyll/jekyll/coverage
 [hakiri]: https://hakiri.io/github/jekyll/jekyll/master
 [travis]: https://travis-ci.org/jekyll/jekyll
+[appveyor]: https://ci.appveyor.com/project/jekyll/jekyll/branch/master
 
 Jekyll is a simple, blog-aware, static site generator perfect for personal, project, or organization sites. Think of it like a file-based CMS, without all the complexity. Jekyll takes your content, renders Markdown and Liquid templates, and spits out a complete, static website ready to be served by Apache, Nginx or another web server. Jekyll is the engine behind [GitHub Pages](https://pages.github.com), which you can use to host sites right from your GitHub repositories.
 
@@ -20,9 +20,11 @@ Jekyll is a simple, blog-aware, static site generator perfect for personal, proj
 
 Jekyll does what you tell it to do — no more, no less. It doesn't try to outsmart users by making bold assumptions, nor does it burden them with needless complexity and configuration. Put simply, Jekyll gets out of your way and allows you to concentrate on what truly matters: your content.
 
-## Having trouble with OS X El Capitan?
+See: https://jekyllrb.com/philosophy
 
-See: https://jekyllrb.com/docs/troubleshooting/#jekyll-amp-mac-os-x-1011
+## Having trouble?
+
+See: https://jekyllrb.com/docs/troubleshooting/
 
 ## Getting Started
 
@@ -35,14 +37,13 @@ See: https://jekyllrb.com/docs/troubleshooting/#jekyll-amp-mac-os-x-1011
 ## Code of Conduct
 
 In order to have a more open and welcoming community, Jekyll adheres to a
-[code of conduct](CONDUCT.markdown) adapted from the Ruby on Rails code of
+[code of conduct](CODE_OF_CONDUCT.markdown) adapted from the Ruby on Rails code of
 conduct.
 
 Please adhere to this code of conduct in any interactions you have in the
 Jekyll community. It is strictly enforced on all official Jekyll
 repositories, websites, and resources. If you encounter someone violating
-these terms, please let a maintainer ([@parkr](https://github.com/parkr), [@envygeeks](https://github.com/envygeeks), or [@mattr-](https://github.com/mattr-)) know
-and we will address it as soon as possible.
+these terms, please let one of our [core team members](https://jekyllrb.com/team/#core-team) know and we will address it as soon as possible.
 
 ## Diving In
 
